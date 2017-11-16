@@ -120,6 +120,18 @@ func (r *repository) getToggle(key string) *api.Feature {
 	return nil
 }
 
+func (r *repository) getAllToggles() []api.Feature {
+	r.RLock()
+	defer r.RUnlock()
+	result := make([]api.Feature, 0)
+	for _, toggle := range r.options.storage.GetAll() {
+		if feature, ok := toggle.(api.Feature); ok {
+			result = append(result, feature)
+		}
+	}
+	return result
+}
+
 func (r *repository) Close() error {
 	r.close <- true
 	return nil

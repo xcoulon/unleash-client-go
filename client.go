@@ -2,11 +2,13 @@ package unleash
 
 import (
 	"fmt"
-	s "github.com/Unleash/unleash-client-go/internal/strategies"
-	"github.com/Unleash/unleash-client-go/strategy"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/Unleash/unleash-client-go/context"
+	s "github.com/Unleash/unleash-client-go/internal/strategies"
+	"github.com/Unleash/unleash-client-go/strategy"
 )
 
 const deprecatedSuffix = "/features"
@@ -244,6 +246,29 @@ func (uc Client) IsEnabled(feature string, options ...FeatureOption) (enabled bo
 		}
 	}
 	return false
+}
+
+// GetEnabledFeatures queries for all enabled features for the given options .
+func (uc Client) GetEnabledFeatures(ctx *context.Context) []string {
+	features := uc.repository.getAllToggles()
+	result := make([]string, 0)
+	for _, f := range features {
+		if !f.Enabled {
+			continue
+		}
+		for _, s := range f.Strategies {
+			foundStrategy := uc.getStrategy(s.Name)
+			if foundStrategy == nil {
+				// TODO: warnOnce missingStrategy
+				continue
+			}
+			if foundStrategy.IsEnabled(s.Parameters, ctx) {
+				result = append(result, f.Name)
+			}
+		}
+
+	}
+	return result
 }
 
 // Close stops the client from syncing data from the server.
