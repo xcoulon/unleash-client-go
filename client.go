@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Unleash/unleash-client-go/api"
 	"github.com/Unleash/unleash-client-go/context"
 	s "github.com/Unleash/unleash-client-go/internal/strategies"
 	"github.com/Unleash/unleash-client-go/strategy"
@@ -248,7 +249,7 @@ func (uc Client) IsEnabled(feature string, options ...FeatureOption) (enabled bo
 	return false
 }
 
-// GetEnabledFeatures queries for all enabled features for the given options .
+// GetEnabledFeatures queries for all enabled features for the given options.
 func (uc Client) GetEnabledFeatures(ctx *context.Context) []string {
 	features := uc.repository.getAllToggles()
 	result := make([]string, 0)
@@ -269,6 +270,28 @@ func (uc Client) GetEnabledFeatures(ctx *context.Context) []string {
 
 	}
 	return result
+}
+
+// GetFeature queries the feature with the given name.
+func (uc Client) GetFeature(name string) *api.Feature {
+	f := uc.repository.getToggle(name)
+	if f == nil {
+		return nil
+	}
+	strategies := make([]api.Strategy, len(f.Strategies))
+	for i, s := range f.Strategies {
+		strategies[i] = api.Strategy{
+			Name:       s.Name,
+			Parameters: s.Parameters,
+		}
+	}
+	return &api.Feature{
+		Name:        f.Name,
+		Description: f.Description,
+		Enabled:     f.Enabled,
+		Strategies:  strategies,
+	}
+
 }
 
 // Close stops the client from syncing data from the server.

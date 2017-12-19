@@ -37,5 +37,18 @@ func TestGetEnabledFeatures(t *testing.T) {
 	features := client.GetEnabledFeatures(ctx)
 	// then
 	assert.NotEmpty(t, features)
+}
 
+func TestGetFeature(t *testing.T) {
+	// given
+	client, err := unleash.NewClient(
+		unleash.WithAppName("fabric8"),
+		unleash.WithUrl("http://localhost:4242/api/"),
+		unleash.WithStrategies(&RolloutByGroupIDStrategy{}),
+	)
+	require.Nil(t, err)
+	// when
+	feature := client.GetFeature("foo")
+	// then
+	assert.NotNil(t, feature)
 }
