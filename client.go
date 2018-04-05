@@ -3,6 +3,7 @@ package unleash
 import (
 	"fmt"
 	"net/url"
+	"regexp"
 	"strings"
 	"time"
 
@@ -249,25 +250,21 @@ func (uc Client) IsEnabled(feature string, options ...FeatureOption) (enabled bo
 	return false
 }
 
-// GetEnabledFeatures queries for all enabled features for the given options.
-func (uc Client) GetEnabledFeatures(ctx *context.Context) []string {
+// GetFeaturesByPattern retrieves all features whose ID match the given pattern
+func (uc Client) GetFeaturesByPattern(ctx *context.Context, pattern string) []api.Feature {
+	result := make([]api.Feature, 0)
+	r, err := regexp.Compile(pattern)
+	if err != nil {
+		return result
+	}
 	features := uc.repository.getAllToggles()
-	result := make([]string, 0)
 	for _, f := range features {
-		if !f.Enabled {
-			continue
-		}
-		for _, s := range f.Strategies {
-			foundStrategy := uc.getStrategy(s.Name)
-			if foundStrategy == nil {
-				// TODO: warnOnce missingStrategy
-				continue
-			}
-			if foundStrategy.IsEnabled(s.Parameters, ctx) {
-				result = append(result, f.Name)
+		if r.Match([]byte(f.Name)) {
+			ft := uc.GetFeature(f.Name)
+			if ft != nil {
+				result = append(result, *ft)
 			}
 		}
-
 	}
 	return result
 }
