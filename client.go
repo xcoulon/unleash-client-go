@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/Unleash/unleash-client-go/api"
-	"github.com/Unleash/unleash-client-go/context"
 	s "github.com/Unleash/unleash-client-go/internal/strategies"
 	"github.com/Unleash/unleash-client-go/strategy"
 )
@@ -255,7 +254,7 @@ func (uc Client) IsEnabled(feature string, options ...FeatureOption) (enabled bo
 }
 
 // GetFeaturesByPattern retrieves all features whose ID match the given pattern
-func (uc Client) GetFeaturesByPattern(ctx *context.Context, pattern string) []api.Feature {
+func (uc Client) GetFeaturesByPattern(pattern string) []api.Feature {
 	result := make([]api.Feature, 0)
 	r, err := regexp.Compile(pattern)
 	if err != nil {
