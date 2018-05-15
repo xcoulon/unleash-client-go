@@ -277,10 +277,8 @@ func (uc Client) GetFeaturesByStrategy(strategyName string) []api.Feature {
 	features := uc.repository.getAllToggles()
 	for _, feat := range features {
 		for _, s := range feat.Strategies {
-			foundStrategy := uc.getStrategy(s.Name)
-			if foundStrategy.Name() == strategyName {
-				ft := uc.GetFeature(feat.Name)
-				result = append(result, *ft)
+			if s.Name() == strategyName {
+				result = append(result, feat)
 			}
 		}
 	}
