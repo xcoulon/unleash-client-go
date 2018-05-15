@@ -271,6 +271,19 @@ func (uc Client) GetFeaturesByPattern(pattern string) []api.Feature {
 	}
 	return result
 }
+// GetFeaturesByStrategy retrieves all features whose used a given Strategy
+func (uc Client) GetFeaturesByStrategy(strategyName string) []api.Feature {
+	result := make([]api.Feature, 0)
+	features := uc.repository.getAllToggles()
+	for _, feat := range features {
+		for _, s := range feat.Strategies {
+			if s.Name() == strategyName {
+				result = append(result, feat)
+			}
+		}
+	}
+	return result
+}
 
 // GetFeature queries the feature with the given name.
 func (uc Client) GetFeature(name string) *api.Feature {
