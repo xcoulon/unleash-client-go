@@ -6,10 +6,8 @@ go:
 go_import_path: github.com/Unleash/unleash-client-go
 
 before_install:
-  - pushd $HOME
-  - mkdir Unleash
-  - mv xcoulon/unleash-client-go Unleash
-  - pushd Unleash/unleash-client-go
+  - mkdir -p $HOME/gopath/src/github.com/Unleash
+  - mv $HOME/gopath/src/github.com/xcoulon/unleash-client-go $HOME/gopath/src/github.com/Unleash
 
 script:
  - go get -t -v ./... 
