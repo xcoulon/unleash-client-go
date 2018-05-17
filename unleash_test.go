@@ -1,6 +1,8 @@
 package unleash
 
 import (
+	"fmt"
+
 	"github.com/stretchr/testify/mock"
 )
 
@@ -15,6 +17,7 @@ type MockedListener struct {
 }
 
 func (l *MockedListener) OnError(err error) {
+	fmt.Printf("error occurred: %v", err)
 	l.Called(err)
 }
 

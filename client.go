@@ -2,11 +2,12 @@ package unleash
 
 import (
 	"fmt"
-	s "github.com/Unleash/unleash-client-go/internal/strategies"
-	"github.com/Unleash/unleash-client-go/strategy"
 	"net/url"
 	"strings"
 	"time"
+
+	s "github.com/Unleash/unleash-client-go/internal/strategies"
+	"github.com/Unleash/unleash-client-go/strategy"
 )
 
 const (
