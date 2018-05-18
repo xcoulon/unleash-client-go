@@ -9,7 +9,7 @@ import (
 )
 
 func getTmpDirPath() string {
-	return os.TempDir()
+	return os.TempDir() + "/"
 }
 
 func generateInstanceId() string {
