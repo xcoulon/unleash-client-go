@@ -135,7 +135,7 @@ func NewClient(options ...ConfigOption) (*Client, error) {
 	}
 
 	if uc.options.instanceId == "" {
-		uc.options.instanceId = generateInstanceId()
+		uc.options.instanceId = generateInstanceID()
 	}
 
 	uc.repository = newRepository(

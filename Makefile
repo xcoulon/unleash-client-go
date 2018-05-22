@@ -78,3 +78,9 @@ vet:
 test: deps vet
 	@echo "running tests..."
 	@go test -v ./... 
+
+.PHONY: build
+## run all tests except in the 'vendor' package 
+build: deps
+	@echo "checking that the client library can build..."
+	@go build *.go
