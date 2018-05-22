@@ -75,7 +75,7 @@ vet:
 
 .PHONY: test
 ## run all tests except in the 'vendor' package 
-test: deps vet
+test: build vet
 	@echo "running tests..."
 	@go test -v ./... 
 
