@@ -40,18 +40,15 @@ func newRepository(options repositoryOptions, channels repositoryChannels) *repo
 
 func (r *repository) sync() {
 	defer r.cleanup()
-
-	refreshTimer := time.NewTimer(r.options.refreshInterval)
-
 	r.fetch()
 	r.ready <- true
-
+	refreshTicker := time.NewTicker(r.options.refreshInterval)
 	for {
 		select {
 		case <-r.close:
-			refreshTimer.Stop()
+			refreshTicker.Stop()
 			return
-		case <-refreshTimer.C:
+		case <-refreshTicker.C:
 			r.fetch()
 		}
 	}
