@@ -42,13 +42,13 @@ func (r *repository) sync() {
 	defer r.cleanup()
 	r.fetch()
 	r.ready <- true
+	refreshTicker := time.NewTicker(r.options.refreshInterval)
 	for {
-		refreshTimer := time.NewTimer(r.options.refreshInterval)
 		select {
 		case <-r.close:
-			refreshTimer.Stop()
+			refreshTicker.Stop()
 			return
-		case <-refreshTimer.C:
+		case <-refreshTicker.C:
 			r.fetch()
 		}
 	}
